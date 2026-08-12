@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2>Notifications</h2>
+    <p class="text-muted mb-0">{{unread_count}} unread notification{{unread_count|pluralize}}.</p>
+  </div>
+  <div class="d-flex gap-2">
+    {% if user.is_superuser %}
+      <a href="/notifications/compose/" class="btn btn-primary">+ Send Announcement</a>
+    {% endif %}
+    {% if unread_count %}
+      <form method="post" action="/notifications/read-all/">
+        {% csrf_token %}
+        <button class="btn btn-outline-secondary">Mark all read</button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row g-3">
+{% for n in notifications %}
+<div class="col-12">
+  <div class="card p-4 {% if not n.is_read %}border-start border-4 border-primary{% endif %}">
+    <div class="d-flex justify-content-between align-items-start gap-3">
+      <div>
+        <div class="d-flex align-items-center gap-2">
+          <h5 class="mb-1">{{n.title}}</h5>
+          {% if not n.is_read %}<span class="badge bg-primary">NEW</span>{% endif %}
+        </div>
+        <div class="small text-muted mb-2">
+          {{n.notification_type}} · {{n.created_at|date:"d M Y, H:i"}}
+        </div>
+        <p class="mb-0">{{n.message}}</p>
+      </div>
+      {% if not n.is_read %}
+        <a class="btn btn-sm btn-outline-primary text-nowrap" href="/notifications/{{n.id}}/read/">
+          {% if n.action_url %}Open{% else %}Mark read{% endif %}
+        </a>
+      {% elif n.action_url %}
+        <a class="btn btn-sm btn-outline-secondary text-nowrap" href="{{n.action_url}}">Open</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% empty %}
+<div class="col-12"><div class="alert alert-info">You have no notifications.</div></div>
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+
+{% extends "base.html" %}
+{% block title %}Students | BrainyBotz{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+<div><h1 class="page-title">Students</h1><p class="page-subtitle">Manage learner profiles and learning journeys.</p></div>
+{% if user.is_superuser %}<a href="/students/add/" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Add Student</a>{% endif %}
+</div>
+<div class="card section-card mb-4">
+<form class="row g-2" method="get"><div class="col-md-9"><input class="form-control" name="q" value="{{q}}" placeholder="Search by name, student ID, school or branch..."></div><div class="col-md-3"><button class="btn btn-primary w-100"><i class="bi bi-search me-1"></i>Search</button></div></form>
+</div>
+<div class="card table-card"><div class="table-responsive"><table class="table">
+<thead><tr><th>Student</th><th>Student ID</th><th>Batch</th><th>Grade</th><th>Branch</th><th></th></tr></thead>
+<tbody>{% for s in students %}<tr><td><strong>{{s.full_name}}</strong><br><small class="text-muted">{{s.school}}</small></td><td>{{s.student_id}}</td><td>{{s.batch.name|default:"Unassigned"}}</td><td>{{s.grade}}</td><td>{{s.branch}}</td><td><a class="btn btn-sm btn-outline-primary" href="/students/{{s.id}}/">View</a></td></tr>
+{% empty %}<tr><td colspan="6"><div class="empty-state">No students found.</div></td></tr>{% endfor %}</tbody>
+</table></div></div>
+{% endblock %}

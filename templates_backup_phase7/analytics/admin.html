@@ -1,0 +1,45 @@
+
+{% extends "base.html" %}
+{% block title %}Analytics | BrainyBotz{% endblock %}
+{% block extra_head %}<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+<div><h1 class="page-title">Analytics & Reports</h1><p class="page-subtitle">Operational visibility across students, attendance and collections.</p></div>
+<div class="dropdown"><button class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">Download Report</button><ul class="dropdown-menu dropdown-menu-end">
+<li><a class="dropdown-item" href="/reports/students.csv">Students CSV</a></li>
+<li><a class="dropdown-item" href="/reports/attendance.csv">Attendance CSV</a></li>
+<li><a class="dropdown-item" href="/reports/fees.csv">Fees CSV</a></li>
+<li><a class="dropdown-item" href="/reports/projects.csv">Projects CSV</a></li>
+</ul></div>
+</div>
+<div class="row g-3 mb-4">
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-people-fill"></i></div><div class="stat-value">{{active_students}}</div><div class="stat-label">Active Students</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-person-workspace"></i></div><div class="stat-value">{{active_trainers}}</div><div class="stat-label">Active Trainers</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-calendar-check"></i></div><div class="stat-value">{{attendance_pct}}%</div><div class="stat-label">Attendance Rate</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-wallet2"></i></div><div class="stat-value">₹{{fee_paid|floatformat:0}}</div><div class="stat-label">Collected</div></div></div>
+</div>
+<div class="row g-4 mb-4">
+<div class="col-xl-7"><div class="card section-card"><div class="section-heading"><h5>Attendance Trend</h5><span class="text-muted small">Last 6 months</span></div><canvas id="attendanceChart" height="120"></canvas></div></div>
+<div class="col-xl-5"><div class="card section-card"><div class="section-heading"><h5>Fee Collection</h5><span class="text-muted small">Monthly</span></div><canvas id="paymentChart" height="155"></canvas></div></div>
+</div>
+<div class="row g-4">
+<div class="col-xl-6"><div class="card section-card"><div class="section-heading"><h5>Student Growth</h5></div><canvas id="growthChart" height="160"></canvas></div></div>
+<div class="col-xl-6"><div class="card section-card"><div class="section-heading"><h5>Batch Distribution</h5></div><canvas id="batchChart" height="160"></canvas></div></div>
+</div>
+<div class="card section-card mt-4"><div class="section-heading"><h5>Financial Snapshot</h5></div>
+<div class="row g-3">
+<div class="col-md-4"><div class="p-3 rounded-3 bg-light"><div class="text-muted small">Total Assigned</div><div class="fs-4 fw-bold">₹{{fee_total|floatformat:0}}</div></div></div>
+<div class="col-md-4"><div class="p-3 rounded-3 bg-light"><div class="text-muted small">Collected</div><div class="fs-4 fw-bold text-success">₹{{fee_paid|floatformat:0}}</div></div></div>
+<div class="col-md-4"><div class="p-3 rounded-3 bg-light"><div class="text-muted small">Outstanding</div><div class="fs-4 fw-bold text-danger">₹{{fee_pending|floatformat:0}}</div></div></div>
+</div></div>
+{% endblock %}
+{% block extra_js %}
+<script>
+const labels={{month_labels|safe}}, attendance={{attendance_series|safe}}, payments={{payment_series|safe}}, growth={{student_growth|safe}}, batch={{batch_data|safe}};
+const common={responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}};
+new Chart(document.getElementById('attendanceChart'),{type:'line',data:{labels,datasets:[{label:'Attendance %',data:attendance,tension:.35,fill:true,borderWidth:2}]},options:{...common,scales:{y:{beginAtZero:true,max:100}}}});
+new Chart(document.getElementById('paymentChart'),{type:'bar',data:{labels,datasets:[{label:'Collected',data:payments,borderRadius:8}]},options:{...common}});
+new Chart(document.getElementById('growthChart'),{type:'line',data:{labels,datasets:[{label:'New Students',data:growth,tension:.35,borderWidth:2}]},options:common});
+new Chart(document.getElementById('batchChart'),{type:'doughnut',data:{labels:batch.map(x=>x.name),datasets:[{data:batch.map(x=>x.count)}]},options:{responsive:true,plugins:{legend:{position:'right'}}}});
+</script>
+{% endblock %}

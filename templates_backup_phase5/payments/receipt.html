@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h2>Payment Receipt</h2>
+  <button onclick="window.print()" class="btn btn-outline-primary">Print Receipt</button>
+</div>
+<div class="card p-5">
+<div class="text-center">
+  <h1 class="fw-bold">BrainyBotz</h1>
+  <p class="text-muted">Student Fee Payment Receipt</p>
+</div>
+<hr>
+<div class="row g-3">
+  <div class="col-md-6"><strong>Receipt Number</strong><br>{{payment.receipt_number}}</div>
+  <div class="col-md-6"><strong>Payment Date</strong><br>{{payment.paid_at|date:"d M Y, H:i"}}</div>
+  <div class="col-md-6"><strong>Student</strong><br>{{payment.student_fee.student.full_name}}</div>
+  <div class="col-md-6"><strong>Student ID</strong><br>{{payment.student_fee.student.student_id}}</div>
+  <div class="col-md-6"><strong>Fee Plan</strong><br>{{payment.student_fee.fee_plan.name}}</div>
+  <div class="col-md-6"><strong>Payment Method</strong><br>{{payment.payment_method}}</div>
+  <div class="col-md-6"><strong>Transaction ID</strong><br>{{payment.razorpay_payment_id|default:payment.transaction_id}}</div>
+  <div class="col-md-6"><strong>Amount Paid</strong><br><span class="fs-4">₹{{payment.amount}}</span></div>
+</div>
+<hr>
+<p class="text-success fw-semibold">Payment successful and recorded in BrainyBotz CRM.</p>
+</div>
+{% endblock %}

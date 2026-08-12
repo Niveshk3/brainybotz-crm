@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}BrainyBotz CRM{% endblock %}</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+:root{
+  --bb-primary:#4f46e5;--bb-primary-2:#7c3aed;--bb-bg:#f6f7fb;
+  --bb-card:#fff;--bb-text:#172033;--bb-muted:#6b7280;--bb-border:#e8eaf0;
+  --bb-sidebar:#111827;--bb-sidebar-hover:#1f2937;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bb-bg);color:var(--bb-text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app-shell{min-height:100vh;display:flex}
+.sidebar{width:260px;min-height:100vh;background:linear-gradient(180deg,#111827,#171d2d);position:fixed;left:0;top:0;bottom:0;z-index:1040;padding:22px 16px;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:800;font-size:22px;padding:8px 10px 24px}
+.brand-mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--bb-primary),var(--bb-primary-2));display:grid;place-items:center;color:#fff;font-weight:900}
+.nav-section{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#7f8ba3;margin:18px 10px 7px}
+.sidebar a.nav-link{color:#b8c0d1;padding:11px 12px;border-radius:10px;display:flex;align-items:center;gap:11px;text-decoration:none;font-weight:500;margin:2px 0}
+.sidebar a.nav-link:hover,.sidebar a.nav-link.active{background:var(--bb-sidebar-hover);color:#fff}
+.sidebar .nav-link i{font-size:18px;width:20px;text-align:center}
+.sidebar-footer{margin-top:25px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+.main-area{margin-left:260px;width:calc(100% - 260px);min-height:100vh}
+.topbar{height:72px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--bb-border);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:1000}
+.page-content{padding:28px 30px 40px}
+.page-title{font-size:26px;font-weight:800;margin:0}
+.page-subtitle{color:var(--bb-muted);margin:5px 0 0}
+.avatar-sm{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#e9e7ff;display:grid;place-items:center;color:var(--bb-primary);font-weight:800}
+.user-menu{display:flex;align-items:center;gap:10px}
+.user-menu-text{line-height:1.15}
+.user-menu-text strong{font-size:14px}.user-menu-text small{color:var(--bb-muted)}
+.card{border:1px solid var(--bb-border);border-radius:16px;box-shadow:0 4px 20px rgba(17,24,39,.04);background:var(--bb-card)}
+.stat-card{padding:20px;height:100%;position:relative;overflow:hidden}
+.stat-icon{width:44px;height:44px;border-radius:12px;background:#eef0ff;color:var(--bb-primary);display:grid;place-items:center;font-size:20px}
+.stat-value{font-size:29px;font-weight:800;margin-top:15px}
+.stat-label{color:var(--bb-muted);font-size:13px;font-weight:600}
+.stat-trend{font-size:12px;color:#16a34a}
+.section-card{padding:22px}
+.section-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-heading h5{margin:0;font-weight:750}
+.quick-action{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--bb-border);border-radius:12px;text-decoration:none;color:var(--bb-text);transition:.15s}
+.quick-action:hover{border-color:#c7c9ff;background:#fafaff;transform:translateY(-1px)}
+.quick-icon{width:40px;height:40px;border-radius:10px;background:#f0efff;color:var(--bb-primary);display:grid;place-items:center}
+.table-card{overflow:hidden}.table-card .table{margin:0}
+.table thead th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#7a8292;background:#fafbfc;border-bottom:1px solid var(--bb-border)}
+.table td{vertical-align:middle;padding:14px 12px;border-color:#eef0f4}
+.badge-soft{border-radius:999px;padding:6px 10px;font-weight:650}
+.badge-soft-primary{background:#eeefff;color:#4f46e5}.badge-soft-success{background:#eaf8ef;color:#16803c}
+.badge-soft-warning{background:#fff7df;color:#a16207}.badge-soft-danger{background:#fff0f0;color:#c62828}
+.progress{height:8px;border-radius:999px;background:#eceef3}.progress-bar{border-radius:999px}
+.empty-state{padding:38px;text-align:center;color:var(--bb-muted)}
+.mobile-menu{display:none}
+.alert{border:0;border-radius:12px}
+.btn-primary{background:var(--bb-primary);border-color:var(--bb-primary)}
+.btn-primary:hover{background:#4338ca;border-color:#4338ca}
+.form-control,.form-select{border-color:#dfe2e9;border-radius:10px;padding:10px 12px}
+.form-control:focus,.form-select:focus{border-color:#a5a4ff;box-shadow:0 0 0 .2rem rgba(79,70,229,.12)}
+.timeline-dot{width:10px;height:10px;background:var(--bb-primary);border-radius:50%;margin-top:6px;flex:0 0 auto}
+@media(max-width:991.98px){
+ .sidebar{transform:translateX(-100%);transition:.2s;width:270px}.sidebar.open{transform:translateX(0)}
+ .main-area{margin-left:0;width:100%}.topbar{padding:0 16px}.page-content{padding:20px 16px 30px}
+ .mobile-menu{display:inline-flex}.user-menu-text{display:none}
+}
+@media(max-width:575.98px){
+ .page-title{font-size:22px}.stat-value{font-size:25px}
+}
+</style>
+{% block extra_head %}{% endblock %}
+</head>
+<body>
+<div class="app-shell">
+<aside class="sidebar" id="sidebar">
+<a href="/" class="brand"><span class="brand-mark">B</span><span>BrainyBotz</span></a>
+<div class="nav-section">Workspace</div>
+<a class="nav-link" href="/"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+{% if user.is_superuser %}
+<a class="nav-link" href="/students/"><i class="bi bi-people-fill"></i>Students</a>
+<a class="nav-link" href="/classes/"><i class="bi bi-calendar3"></i>Classes</a>
+<a class="nav-link" href="/projects/"><i class="bi bi-kanban-fill"></i>Projects</a>
+<a class="nav-link" href="/fees/"><i class="bi bi-credit-card-fill"></i>Fees & Payments</a>
+<a class="nav-link" href="/community/"><i class="bi bi-megaphone-fill"></i>Community</a>
+{% elif user.profile.role == "TRAINER" %}
+<a class="nav-link" href="/students/"><i class="bi bi-people-fill"></i>My Students</a>
+<a class="nav-link" href="/classes/"><i class="bi bi-calendar3"></i>My Classes</a>
+<a class="nav-link" href="/projects/"><i class="bi bi-kanban-fill"></i>Projects</a>
+<a class="nav-link" href="/community/"><i class="bi bi-megaphone-fill"></i>Community</a>
+{% else %}
+<a class="nav-link" href="/classes/"><i class="bi bi-calendar3"></i>My Classes</a>
+<a class="nav-link" href="/projects/"><i class="bi bi-kanban-fill"></i>My Projects</a>
+<a class="nav-link" href="/fees/"><i class="bi bi-credit-card-fill"></i>Fees & Payments</a>
+<a class="nav-link" href="/certificates/"><i class="bi bi-award-fill"></i>Certificates</a>
+<a class="nav-link" href="/community/"><i class="bi bi-megaphone-fill"></i>Community</a>
+{% endif %}
+<div class="nav-section">Insights</div>
+<a class="nav-link" href="/analytics/"><i class="bi bi-bar-chart-fill"></i>Analytics</a>
+<div class="nav-section">Communication</div>
+<a class="nav-link" href="/notifications/"><i class="bi bi-bell-fill"></i>Notifications {% if unread_notifications %}<span class="badge bg-danger ms-auto">{{unread_notifications}}</span>{% endif %}</a>
+<a class="nav-link" href="/profile/"><i class="bi bi-person-circle"></i>My Profile</a>
+{% if user.is_superuser %}
+<div class="nav-section">Administration</div>
+<a class="nav-link" href="/employee-attendance/"><i class="bi bi-person-check-fill"></i>Employee Attendance</a>
+<a class="nav-link" href="/admin/"><i class="bi bi-gear-fill"></i>Django Admin</a>
+{% endif %}
+<div class="sidebar-footer">
+<form action="/logout/" method="post">{% csrf_token %}<button class="btn btn-outline-light btn-sm w-100"><i class="bi bi-box-arrow-right me-1"></i> Logout</button></form>
+</div>
+</aside>
+
+<div class="main-area">
+<header class="topbar">
+<button class="btn btn-light mobile-menu" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="bi bi-list fs-4"></i></button>
+<div class="d-none d-md-block text-muted small">Student Management & Learning Platform</div>
+<div class="user-menu">
+<div class="user-menu-text text-end"><strong>{{user.get_full_name|default:user.username}}</strong><br><small>{{user.profile.role|title}}</small></div>
+{% if user.student.photo %}<img class="avatar-sm" src="{{user.student.photo.url}}">{% else %}<div class="avatar-sm">{{user.username|slice:":1"|upper}}</div>{% endif %}
+</div>
+</header>
+<main class="page-content">
+{% if messages %}{% for message in messages %}<div class="alert alert-success mb-3"><i class="bi bi-check-circle me-2"></i>{{message}}</div>{% endfor %}{% endif %}
+{% block content %}{% endblock %}
+</main>
+</div>
+</div>
+<script>
+document.querySelectorAll('.sidebar a').forEach(a=>{
+ if(a.href===window.location.href)a.classList.add('active');
+});
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

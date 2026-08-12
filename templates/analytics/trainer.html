@@ -1,0 +1,13 @@
+
+{% extends "base.html" %}
+{% block title %}Trainer Analytics | BrainyBotz{% endblock %}
+{% block content %}
+<div class="mb-4"><h1 class="page-title">My Analytics</h1><p class="page-subtitle">Your teaching activity and attendance overview.</p></div>
+<div class="row g-3 mb-4">
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-calendar3"></i></div><div class="stat-value">{{class_count}}</div><div class="stat-label">Classes</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-people"></i></div><div class="stat-value">{{student_count}}</div><div class="stat-label">Students</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-check2-circle"></i></div><div class="stat-value">{{attendance_pct}}%</div><div class="stat-label">Attendance</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-file-earmark-text"></i></div><div class="stat-value">{{report_count}}</div><div class="stat-label">Sessions</div></div></div>
+</div>
+<div class="card section-card"><h5>Trainer Report</h5><p class="text-muted">Download your attendance dataset for further analysis.</p><a href="/reports/attendance.csv" class="btn btn-primary">Download Attendance CSV</a></div>
+{% endblock %}

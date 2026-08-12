@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}Student Dashboard{% endblock %}{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4"><div><h2 class="fw-bold">Welcome, {{student.full_name}}</h2><p class="text-muted">{{student.grade}} · {{student.branch}} · {{student.batch}}</p></div>
+{% if student.photo %}<img src="{{student.photo.url}}" class="avatar">{% endif %}</div>
+<div class="row g-3 mb-4">
+<div class="col-md-3"><div class="card p-3"><small>Attendance</small><h2>{{student.attendance_percentage}}%</h2></div></div>
+<div class="col-md-3"><div class="card p-3"><small>Projects</small><h2>{{projects|length}}</h2></div></div>
+<div class="col-md-3"><div class="card p-3"><small>Achievements</small><h2>{{achievements|length}}</h2></div></div>
+<div class="col-md-3"><div class="card p-3"><small>Notifications</small><h2>{{notifications|length}}</h2></div></div>
+</div>
+<div class="row g-4">
+<div class="col-lg-8"><div class="card p-4"><h5>My Learning</h5>{% for c in recent_classes %}<div class="border-bottom py-3"><strong>{{c.date}} — {{c.topic}}</strong><div>{{c.activity}}</div><small class="text-muted">{{c.batch.name}}</small></div>{% empty %}<p>No classes yet.</p>{% endfor %}</div></div>
+<div class="col-lg-4"><div class="card p-4"><h5>Upcoming Classes</h5>{% for c in upcoming %}<div class="py-2"><strong>{{c.date}}</strong><br>{{c.topic}}<br><small>{{c.start_time}} - {{c.end_time}}</small></div>{% empty %}<p>No upcoming classes.</p>{% endfor %}</div></div>
+</div>
+{% endblock %}

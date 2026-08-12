@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+  <div>
+    <h2>{{session.topic|default:"Class Session"}}</h2>
+    <p class="text-muted">{{session.date}} · {{session.batch.name}} · {{session.start_time}}–{{session.end_time}} · {{session.activity}}</p>
+  </div>
+  {% if can_manage %}
+  <div class="d-flex gap-2">
+    <a class="btn btn-primary" href="/classes/{{session.id}}/attendance/">Attendance</a>
+    <a class="btn btn-outline-primary" href="/classes/{{session.id}}/report/">Class Report</a>
+  </div>
+  {% endif %}
+</div>
+
+{% if report %}
+<div class="card p-4 mb-4">
+  <h4>Class Report</h4>
+  <p><strong>What was taught</strong><br>{{report.what_was_taught}}</p>
+  <p><strong>What students did</strong><br>{{report.what_students_did}}</p>
+  <p><strong>Skills developed</strong><br>{{report.skills_developed}}</p>
+  <p><strong>Materials used</strong><br>{{report.materials_used}}</p>
+  <p><strong>Trainer summary</strong><br>{{report.trainer_summary}}</p>
+
+  {% if report.media.all %}
+  <hr>
+  <h5>Activity Media</h5>
+  <div class="row g-2">
+  {% for media in report.media.all %}
+    <div class="col-md-3">
+      <a href="{{media.file.url}}" target="_blank" class="btn btn-light border w-100 text-start">
+        {{media.file.name|truncatechars:35}}
+      </a>
+    </div>
+  {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% else %}
+<div class="alert alert-info">No class report submitted yet.</div>
+{% endif %}
+
+<div class="card p-4">
+  <div class="d-flex justify-content-between align-items-center">
+    <h4>Student Feedback</h4>
+  </div>
+  <div class="table-responsive">
+  <table class="table align-middle">
+    <thead><tr><th>Student</th><th>Participation</th><th>Understanding</th><th>Practical</th><th>Teamwork</th><th>Comment</th><th></th></tr></thead>
+    <tbody>
+    {% for f in feedbacks %}
+      <tr>
+        <td>{{f.student.full_name}}</td>
+        <td>⭐{{f.participation}}</td>
+        <td>⭐{{f.understanding}}</td>
+        <td>⭐{{f.practical_skills}}</td>
+        <td>⭐{{f.teamwork}}</td>
+        <td>{{f.trainer_comment|default:"-"}}</td>
+        <td>{% if can_manage %}<a href="/classes/{{session.id}}/feedback/?student={{f.student.id}}">Edit</a>{% endif %}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="7">No feedback has been added yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+
+  {% if can_manage %}
+  <hr>
+  <h6>Add feedback for a student</h6>
+  <div class="d-flex flex-wrap gap-2">
+    {% for s in session.batch.students.all %}
+      <a class="btn btn-sm btn-outline-primary" href="/classes/{{session.id}}/feedback/?student={{s.id}}">
+        {{s.full_name}}
+      </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

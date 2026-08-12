@@ -1,0 +1,4 @@
+Django>=5.2,<6.0
+Pillow>=11.0
+django-filter>=25.1
+razorpay>=1.4.2

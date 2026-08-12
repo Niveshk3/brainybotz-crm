@@ -1,0 +1,37 @@
+
+{% extends "base.html" %}
+{% block title %}My Learning | BrainyBotz{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+<div><h1 class="page-title">Welcome back, {{student.full_name|truncatewords:3}} 👋</h1><p class="page-subtitle">{{student.grade}} · {{student.branch}} · {{student.batch}}</p></div>
+<a href="/profile/" class="btn btn-outline-primary"><i class="bi bi-person me-1"></i> My Profile</a>
+</div>
+<div class="row g-3 mb-4">
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-calendar2-check"></i></div><div class="stat-value">{{student.attendance_percentage}}%</div><div class="stat-label">Attendance</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-kanban"></i></div><div class="stat-value">{{projects|length}}</div><div class="stat-label">Projects</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-award"></i></div><div class="stat-value">{{achievements|length}}</div><div class="stat-label">Achievements</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-bell"></i></div><div class="stat-value">{{notifications|length}}</div><div class="stat-label">Recent Notifications</div></div></div>
+</div>
+<div class="row g-4">
+<div class="col-xl-7"><div class="card section-card h-100"><div class="section-heading"><h5>Learning Timeline</h5><a href="/classes/" class="small">View classes</a></div>
+{% for c in recent_classes %}
+<div class="d-flex gap-3 py-3 border-bottom"><span class="timeline-dot"></span><div><strong>{{c.date}} · {{c.topic}}</strong><div class="text-muted small mt-1">{{c.activity|default:"Class session"}} · {{c.batch.name}}</div></div></div>
+{% empty %}<div class="empty-state">No classes recorded yet.</div>{% endfor %}
+</div></div>
+<div class="col-xl-5"><div class="card section-card h-100"><div class="section-heading"><h5>Upcoming Classes</h5></div>
+{% for c in upcoming %}<div class="py-3 border-bottom"><div class="d-flex justify-content-between"><strong>{{c.date}}</strong><span class="badge-soft badge-soft-primary">{{c.start_time}}</span></div><div class="mt-1">{{c.topic|default:"Class session"}}</div><small class="text-muted">{{c.start_time}} – {{c.end_time}}</small></div>
+{% empty %}<div class="empty-state">No upcoming classes.</div>{% endfor %}
+</div></div>
+</div>
+<div class="row g-4 mt-0">
+<div class="col-md-6"><div class="card section-card"><div class="section-heading"><h5>Quick Access</h5></div><div class="row g-2">
+<a class="col-6 quick-action" href="/projects/"><span class="quick-icon"><i class="bi bi-kanban"></i></span><span><strong>Projects</strong><br><small class="text-muted">My portfolio</small></span></a>
+<a class="col-6 quick-action" href="/fees/"><span class="quick-icon"><i class="bi bi-credit-card"></i></span><span><strong>Fees</strong><br><small class="text-muted">Payments</small></span></a>
+<a class="col-6 quick-action" href="/portfolio/"><span class="quick-icon"><i class="bi bi-award"></i></span><span><strong>Awards</strong><br><small class="text-muted">Certificates</small></span></a>
+<a class="col-6 quick-action" href="/notifications/"><span class="quick-icon"><i class="bi bi-bell"></i></span><span><strong>Alerts</strong><br><small class="text-muted">Notifications</small></span></a>
+</div></div></div>
+<div class="col-md-6"><div class="card section-card"><div class="section-heading"><h5>Attendance</h5><span class="badge-soft badge-soft-success">Current</span></div>
+<div class="d-flex align-items-center gap-4"><div class="display-5 fw-bold">{{student.attendance_percentage}}%</div><div class="flex-grow-1"><div class="progress"><div class="progress-bar bg-success" style="width:{{student.attendance_percentage}}%"></div></div><small class="text-muted d-block mt-2">Keep attending consistently to maintain strong progress.</small></div></div>
+</div></div>
+</div>
+{% endblock %}

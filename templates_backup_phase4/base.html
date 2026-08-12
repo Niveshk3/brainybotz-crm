@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}BrainyBotz CRM{% endblock %}</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body{background:#f5f7fb}.sidebar{min-height:100vh;background:#111827}.sidebar a{color:#d1d5db;text-decoration:none;display:block;padding:10px 16px;border-radius:8px}.sidebar a:hover{background:#1f2937;color:white}.brand{font-weight:800;color:white;font-size:22px}.card{border:0;box-shadow:0 2px 12px rgba(0,0,0,.06)}.avatar{width:72px;height:72px;object-fit:cover;border-radius:50%}
+</style>
+</head>
+<body>
+<div class="container-fluid">
+<div class="row">
+<aside class="col-lg-2 sidebar p-3">
+<div class="brand mb-4">BrainyBotz</div>
+<a href="/">Dashboard</a>
+<a href="/students/">Students</a>
+<a href="/classes/">Classes</a>
+<a href="/projects/">Projects</a>
+<a href="/community/">Community</a>
+<a href="/fees/">Fees</a>
+<a href="/certificates/">Certificates</a>
+<a href="/notifications/">Notifications {% if unread_notifications %}<span class="badge bg-danger">{{unread_notifications}}</span>{% endif %}</a>
+{% if user.is_superuser %}<a href="/employee-attendance/">Employee Attendance</a><a href="/admin/">Django Admin</a>{% endif %}
+<hr class="border-secondary">
+<form action="/logout/" method="post">{% csrf_token %}<button class="btn btn-outline-light btn-sm w-100">Logout</button></form>
+</aside>
+<main class="col-lg-10 p-4">
+{% if messages %}{% for message in messages %}<div class="alert alert-success">{{ message }}</div>{% endfor %}{% endif %}
+{% block content %}{% endblock %}
+</main>
+</div></div>
+</body>
+</html>

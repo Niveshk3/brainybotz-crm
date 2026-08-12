@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Admin Dashboard{% endblock %}{% block content %}
+<h2 class="fw-bold">Admin Dashboard</h2><p class="text-muted">BrainyBotz operations overview</p>
+<div class="row g-3 mb-4">
+{% for label,value in counts %}<div class="col-md-3"><div class="card p-3"><small class="text-muted">{{label}}</small><h2>{{value}}</h2></div></div>{% endfor %}
+</div>
+<div class="row g-3">
+<div class="col-md-8"><div class="card p-4"><h5>Quick Actions</h5><div class="d-flex gap-2 flex-wrap"><a href="/students/" class="btn btn-primary">Manage Students</a><a href="/classes/" class="btn btn-outline-primary">Classes</a><a href="/admin/core/classsession/add/" class="btn btn-outline-primary">Create Class</a><a href="/admin/core/communitypost/add/" class="btn btn-outline-primary">Community Post</a></div></div></div>
+<div class="col-md-4"><div class="card p-4"><h5>Pending Fees</h5><h2>{{pending_fees}}</h2><a href="/fees/">View fees</a></div></div>
+</div>
+{% endblock %}

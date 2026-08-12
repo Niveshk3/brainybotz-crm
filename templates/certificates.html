@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Certificates | BrainyBotz{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+<div><h1 class="page-title">Certificates</h1><p class="page-subtitle">Recognition and completion records.</p></div>
+</div>
+<div class="row g-3">
+{% for c in certificates %}
+<div class="col-md-6 col-xl-4"><div class="card section-card h-100"><div class="d-flex justify-content-between gap-2"><div><h5 class="mb-1">{{c.title}}</h5><div class="text-muted small">{{c.student.full_name}}</div></div><span class="badge-soft badge-soft-success">{{c.certificate_type}}</span></div><div class="mt-3 small text-muted">Issued {{c.issue_date}}</div>{% if c.file %}<a href="{{c.file.url}}" target="_blank" class="btn btn-outline-primary btn-sm mt-3">View Certificate</a>{% endif %}<a href="/portfolio/?student={{c.student.id}}" class="btn btn-link btn-sm mt-2">Open Portfolio</a></div></div>
+{% empty %}<div class="col-12"><div class="empty-state">No certificates available.</div></div>{% endfor %}
+</div>
+{% endblock %}

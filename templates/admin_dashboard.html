@@ -1,0 +1,61 @@
+
+{% extends "base.html" %}
+{% block title %}Admin Dashboard | BrainyBotz{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+<div><h1 class="page-title">Good day, Admin 👋</h1><p class="page-subtitle">Here's what's happening across BrainyBotz today.</p></div>
+<a href="/students/add/" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Add Student</a>
+</div>
+
+<div class="row g-3 mb-4">
+{% for label,value in counts %}
+<div class="col-6 col-xl-3">
+<div class="card stat-card">
+<div class="d-flex justify-content-between"><span class="stat-label">{{label}}</span><span class="stat-icon">
+{% if label == "Students" %}<i class="bi bi-people-fill"></i>{% elif label == "Trainers" %}<i class="bi bi-person-workspace"></i>{% elif label == "Batches" %}<i class="bi bi-collection-fill"></i>{% else %}<i class="bi bi-calendar-check-fill"></i>{% endif %}
+</span></div>
+<div class="stat-value">{{value}}</div><span class="stat-trend"><i class="bi bi-arrow-up"></i> Active records</span>
+</div></div>
+{% endfor %}
+</div>
+
+<div class="row g-4 mb-4">
+<div class="col-xl-8">
+<div class="card section-card h-100">
+<div class="section-heading"><h5>Quick Actions</h5><span class="text-muted small">Common tasks</span></div>
+<div class="row g-3">
+<a class="col-md-6 quick-action" href="/students/add/"><span class="quick-icon"><i class="bi bi-person-plus-fill"></i></span><span><strong>Add Student</strong><br><small class="text-muted">Create a new learner profile</small></span></a>
+<a class="col-md-6 quick-action" href="/classes/"><span class="quick-icon"><i class="bi bi-calendar-plus"></i></span><span><strong>Manage Classes</strong><br><small class="text-muted">Review scheduled sessions</small></span></a>
+<a class="col-md-6 quick-action" href="/fees/"><span class="quick-icon"><i class="bi bi-wallet2"></i></span><span><strong>Fees & Payments</strong><br><small class="text-muted">Track outstanding balances</small></span></a>
+<a class="col-md-6 quick-action" href="/notifications/compose/"><span class="quick-icon"><i class="bi bi-send-fill"></i></span><span><strong>Send Announcement</strong><br><small class="text-muted">Notify students or trainers</small></span></a>
+</div>
+</div></div>
+<div class="col-xl-4">
+<div class="card section-card h-100">
+<div class="section-heading"><h5>Fee Overview</h5><i class="bi bi-credit-card text-primary"></i></div>
+<div class="d-flex align-items-end gap-2"><span class="display-6 fw-bold">{{pending_fees}}</span><span class="text-muted mb-2">accounts pending</span></div>
+<p class="text-muted small mt-2">Review fee balances and payment history.</p>
+<a href="/fees/" class="btn btn-outline-primary w-100">Open Fees</a>
+</div></div>
+</div>
+
+<div class="row g-4">
+<div class="col-xl-7">
+<div class="card table-card">
+<div class="section-card pb-2"><div class="section-heading mb-0"><h5>Recent Community</h5><a href="/community/" class="small">View all</a></div></div>
+<div class="table-responsive"><table class="table">
+<thead><tr><th>Post</th><th>Type</th><th>Status</th></tr></thead><tbody>
+{% for post in recent_posts %}<tr><td><strong>{{post.title}}</strong><br><small class="text-muted">{{post.created_at|date:"d M Y"}}</small></td><td>{{post.post_type}}</td><td><span class="badge-soft badge-soft-success">Published</span></td></tr>
+{% empty %}<tr><td colspan="3"><div class="empty-state">No recent community posts.</div></td></tr>{% endfor %}
+</tbody></table></div>
+</div></div>
+<div class="col-xl-5">
+<div class="card section-card">
+<div class="section-heading"><h5>System Snapshot</h5></div>
+<div class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Active Students</span><strong>{{student_count}}</strong></div>
+<div class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Active Trainers</span><strong>{{trainer_count}}</strong></div>
+<div class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Active Batches</span><strong>{{batch_count}}</strong></div>
+<div class="d-flex justify-content-between py-2"><span class="text-muted">Total Classes</span><strong>{{class_count}}</strong></div>
+</div></div>
+</div>
+{% endblock %}

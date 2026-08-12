@@ -1,0 +1,29 @@
+
+{% extends "base.html" %}
+{% block title %}Trainer Dashboard | BrainyBotz{% endblock %}
+{% block content %}
+<div class="mb-4"><h1 class="page-title">Trainer Dashboard</h1><p class="page-subtitle">Your workflow for today: Attendance → Report → Feedback.</p></div>
+<div class="row g-3 mb-4">
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-calendar-event"></i></div><div class="stat-value">{{today_classes|length}}</div><div class="stat-label">Today's Classes</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-people"></i></div><div class="stat-value">{{batches|length}}</div><div class="stat-label">Active Batches</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-clipboard-check"></i></div><div class="stat-value">Ready</div><div class="stat-label">Attendance Workflow</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-chat-square-text"></i></div><div class="stat-value">Live</div><div class="stat-label">Feedback Workflow</div></div></div>
+</div>
+<div class="card section-card mb-4">
+<div class="section-heading"><h5>Today's Classes</h5><span class="badge-soft badge-soft-primary">{{today_classes|length}} scheduled</span></div>
+{% for c in today_classes %}
+<div class="border rounded-3 p-3 mb-3">
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+<div><h6 class="fw-bold mb-1">{{c.batch.name}}</h6><div class="text-muted small"><i class="bi bi-clock me-1"></i>{{c.start_time}} – {{c.end_time}}</div><div class="mt-2">{{c.topic|default:"Topic not selected"}}{% if c.activity %}<span class="text-muted"> · {{c.activity}}</span>{% endif %}</div></div>
+<div class="d-flex gap-2 flex-wrap">
+<a class="btn btn-sm btn-primary" href="/classes/{{c.id}}/attendance/"><i class="bi bi-check2-square me-1"></i>Attendance</a>
+<a class="btn btn-sm btn-outline-primary" href="/classes/{{c.id}}/report/"><i class="bi bi-file-earmark-text me-1"></i>Report</a>
+<a class="btn btn-sm btn-outline-secondary" href="/classes/{{c.id}}/"><i class="bi bi-chat-left-text me-1"></i>Feedback</a>
+</div></div></div>
+{% empty %}<div class="empty-state"><i class="bi bi-calendar-x fs-1 d-block mb-2"></i>No classes scheduled today.</div>{% endfor %}
+</div>
+<div class="card section-card"><div class="section-heading"><h5>My Batches</h5></div><div class="row g-3">
+{% for batch in batches %}<div class="col-md-4"><div class="border rounded-3 p-3"><div class="fw-bold">{{batch.name}}</div><small class="text-muted">{{batch.students.count}} students · {{batch.branch}}</small></div></div>
+{% empty %}<div class="col-12"><div class="empty-state">No active batches.</div></div>{% endfor %}
+</div></div>
+{% endblock %}

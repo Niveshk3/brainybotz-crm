@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Student Portfolio | BrainyBotz{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+<div><h1 class="page-title">{{student.full_name}}'s Portfolio</h1><p class="page-subtitle">{{student.student_id}} · {{student.grade}} · {{student.branch}}</p></div>
+<div class="d-flex gap-2">
+{% if user.is_superuser or user.profile.role == "TRAINER" %}
+<a href="/achievements/add/?student={{student.id}}" class="btn btn-outline-primary"><i class="bi bi-trophy me-1"></i>Add Achievement</a>
+<a href="/certificates/add/?student={{student.id}}" class="btn btn-primary"><i class="bi bi-award me-1"></i>Add Certificate</a>
+{% elif user.profile.role == "STUDENT" %}
+<a href="/achievements/add/" class="btn btn-outline-primary"><i class="bi bi-trophy me-1"></i>Add Achievement</a>
+<a href="/certificates/add/" class="btn btn-primary"><i class="bi bi-award me-1"></i>Add Certificate</a>
+{% endif %}
+</div>
+</div>
+
+<div class="row g-3 mb-4">
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-calendar2-check"></i></div><div class="stat-value">{{attendance_pct}}%</div><div class="stat-label">Attendance</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-kanban"></i></div><div class="stat-value">{{projects|length}}</div><div class="stat-label">Projects</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-trophy"></i></div><div class="stat-value">{{achievements|length}}</div><div class="stat-label">Achievements</div></div></div>
+<div class="col-6 col-xl-3"><div class="card stat-card"><div class="stat-icon"><i class="bi bi-award"></i></div><div class="stat-value">{{certificates|length}}</div><div class="stat-label">Certificates</div></div></div>
+</div>
+
+<div class="row g-4">
+<div class="col-lg-7">
+<div class="card section-card mb-4"><div class="section-heading"><h5>STEM Projects</h5><a href="/projects/?student={{student.id}}" class="small">View projects</a></div>
+{% for p in projects %}
+<div class="border rounded-3 p-3 mb-3"><div class="d-flex justify-content-between"><strong>{{p.title}}</strong><span class="badge-soft badge-soft-primary">{{p.project_date}}</span></div><p class="text-muted small mt-2 mb-1">{{p.description|truncatewords:30}}</p>{% if p.skills %}<small><strong>Skills:</strong> {{p.skills}}</small>{% endif %}</div>
+{% empty %}<div class="empty-state">No projects in the portfolio yet.</div>{% endfor %}
+</div>
+<div class="card section-card"><div class="section-heading"><h5>Achievements</h5></div>
+{% for a in achievements %}
+<div class="d-flex gap-3 py-3 border-bottom"><div class="quick-icon"><i class="bi bi-trophy-fill"></i></div><div><strong>{{a.title}}</strong><div class="text-muted small">{{a.achievement_date}}</div><div class="small mt-1">{{a.description}}</div></div></div>
+{% empty %}<div class="empty-state">No achievements recorded yet.</div>{% endfor %}
+</div>
+</div>
+<div class="col-lg-5">
+<div class="card section-card"><div class="section-heading"><h5>Certificates</h5></div>
+{% for c in certificates %}
+<div class="border rounded-3 p-3 mb-3"><div class="d-flex justify-content-between gap-2"><strong>{{c.title}}</strong><span class="badge-soft badge-soft-success">{{c.certificate_type}}</span></div><div class="text-muted small mt-2">Issued {{c.issue_date}}</div>{% if c.file %}<a href="{{c.file.url}}" target="_blank" class="btn btn-sm btn-outline-primary mt-3"><i class="bi bi-download me-1"></i>View Certificate</a>{% endif %}</div>
+{% empty %}<div class="empty-state">No certificates issued yet.</div>{% endfor %}
+</div>
+</div>
+</div>
+{% endblock %}
